@@ -1,5 +1,8 @@
-# Virtual environment
+# Virtual environments
 cattle_env/
+.venv/
+venv/
+env/
 
 # Dataset (too large for GitHub)
 dataset/
@@ -7,7 +10,11 @@ dataset/
 # Compiled files
 __pycache__/
 *.pyc
+*.pyo
 
 # OS files
 .DS_Store
 Thumbs.db
+
+# Streamlit
+.streamlit/
