@@ -44,73 +44,14 @@ def predict_breed(img):
     return predictions
 
 # ── Human Face Detection ─────────────────────────────
-# def has_human_face(pil_img):
-#     img_cv = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
-#     face_cascade = cv2.CascadeClassifier(
-#         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-#     )
-#     gray = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
-#     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-#     return len(faces) > 0
-
-# def is_invalid_image(pil_img):
-#     img_cv = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
-    
-#     # Check 1: Human face
-#     face_cascade = cv2.CascadeClassifier(
-#         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-#     )
-#     gray = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
-#     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-#     if len(faces) > 0:
-#         return True, "Human face detected!"
-
-#     # Check 2: Natural colors (blocks screenshots/diagrams)
-#     hsv = cv2.cvtColor(img_cv, cv2.COLOR_BGR2HSV)
-#     saturation = hsv[:, :, 1].mean()
-#     if saturation < 30:
-#         return True, "Image appears to be a screenshot or diagram!"
-
-#     # Check 3: Color variation (natural photo)
-#     std_dev = img_cv.std()
-#     if std_dev < 20:
-#         return True, "Image is too uniform!"
-
-#     return False, ""
-# def is_invalid_image(pil_img):
-#     img_cv = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
-
-#     # Check 1: Human face
-#     face_cascade = cv2.CascadeClassifier(
-#         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-#     )
-#     gray = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
-#     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-#     if len(faces) > 0:
-#         return True, "Human face detected!"
-
-#     # Check 2: Too many straight lines = diagram/screenshot
-#     edges = cv2.Canny(gray, 50, 150)
-#     lines = cv2.HoughLinesP(edges, 1, np.pi/180, 
-#                              threshold=100, 
-#                              minLineLength=100, 
-#                              maxLineGap=10)
-#     if lines is not None and len(lines) > 20:
-#         return True, "Image appears to be a diagram or screenshot!"
-
-#     # Check 3: Too much white/light background = document/screenshot
-#     hsv = cv2.cvtColor(img_cv, cv2.COLOR_BGR2HSV)
-#     white_mask = cv2.inRange(hsv, (0, 0, 200), (180, 30, 255))
-#     white_ratio = np.sum(white_mask > 0) / (img_cv.shape[0] * img_cv.shape[1])
-#     if white_ratio > 0.4:
-#         return True, "Image appears to be a document or screenshot!"
-
-#     # Check 4: Low saturation = not a natural photo
-#     saturation = hsv[:, :, 1].mean()
-#     if saturation < 25:
-#         return True, "Image does not appear to be a natural photo!"
-
-#     return False, ""
+def has_human_face(pil_img):
+    img_cv = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
+    face_cascade = cv2.CascadeClassifier(
+        cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+    )
+    gray = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    return len(faces) > 0
 
 # ── UI ───────────────────────────────────────────────
 st.title("🔍 Compare Two Cattle/Buffalo Images")
@@ -141,7 +82,6 @@ if upload1 and upload2:
     img2 = Image.open(upload2).convert("RGB")
 
     col1, col2 = st.columns(2)
-
     with col1:
         st.image(img1, use_container_width=True, caption="Image 1")
     with col2:
@@ -149,25 +89,13 @@ if upload1 and upload2:
 
     st.markdown("---")
 
-    # ── Validate ─────────────────────────────────────
-    # error1 = has_human_face(img1)
-    # error2 = has_human_face(img2)
-
-    # if error1 or error2:
-    #     if error1:
-    #         st.error("⚠️ Image 1 contains a human face! Please upload cattle/buffalo only.")
-    #     if error2:
-    #         st.error("⚠️ Image 2 contains a human face! Please upload cattle/buffalo only.")
-    #     st.stop()
-    # invalid1, reason1 = is_invalid_image(img1)
-    # invalid2, reason2 = is_invalid_image(img2)
-
-    # if invalid1 or invalid2:
-    #     if invalid1:
-    #         st.error(f"⚠️ Image 1: {reason1} Please upload a real cattle or buffalo photo!")
-    #     if invalid2:
-    #         st.error(f"⚠️ Image 2: {reason2} Please upload a real cattle or buffalo photo!")
-    #     st.stop()
+    # ── Human Face Check ─────────────────────────────
+    if has_human_face(img1):
+        st.error("⚠️ Image 1 contains a human face! Please upload cattle or buffalo only.")
+        st.stop()
+    if has_human_face(img2):
+        st.error("⚠️ Image 2 contains a human face! Please upload cattle or buffalo only.")
+        st.stop()
 
     # ── Predict Both ──────────────────────────────────
     with st.spinner("🔍 Analyzing both images..."):
@@ -179,21 +107,15 @@ if upload1 and upload2:
 
     breed1_key = class_names[str(top1_idx)]
     breed2_key = class_names[str(top2_idx)]
-    # ── Block "Other" class ───────────────────────────────
-    # if "Other" in breed1_key or "Other" in breed2_key:
-    #     if "Other" in breed1_key:
-    #         st.error("⚠️ Image 1 does not appear to be a cattle or buffalo!")
-    #     if "Other" in breed2_key:
-    #         st.error("⚠️ Image 2 does not appear to be a cattle or buffalo!")
-    #     st.stop()
 
     top1_conf = pred1[top1_idx] * 100
     top2_conf = pred2[top2_idx] * 100
 
-    if "Other" in breed1_key or top1_conf < 45:
+    # ── Block Other/Unknown ───────────────────────────
+    if "Other" in breed1_key or top1_conf < 30:
         st.error("⚠️ Image 1 does not appear to be a cattle or buffalo!")
         st.stop()
-    if "Other" in breed2_key or top2_conf < 45:
+    if "Other" in breed2_key or top2_conf < 30:
         st.error("⚠️ Image 2 does not appear to be a cattle or buffalo!")
         st.stop()
 
@@ -213,7 +135,6 @@ if upload1 and upload2:
         if conf1 < 40:
             st.warning("⚠️ Low confidence!")
         st.info(breed_info.get(breed1_key, "Indian breed"))
-
         st.markdown("**Top 3 Predictions:**")
         for idx in np.argsort(pred1)[::-1][:3]:
             bname = class_names[str(idx)].replace("_India","").replace("_"," ").title()
@@ -225,7 +146,6 @@ if upload1 and upload2:
         if conf2 < 40:
             st.warning("⚠️ Low confidence!")
         st.info(breed_info.get(breed2_key, "Indian breed"))
-
         st.markdown("**Top 3 Predictions:**")
         for idx in np.argsort(pred2)[::-1][:3]:
             bname = class_names[str(idx)].replace("_India","").replace("_"," ").title()
