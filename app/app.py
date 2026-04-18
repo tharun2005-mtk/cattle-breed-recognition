@@ -203,7 +203,7 @@
 # #     with col1:
 # #         st.subheader("📸 Uploaded Image")
 # #         # st.image(img, use_container_width=True)
-# #         st.image(img, width='stretch')
+# #         st.image(img, use_container_width=True)
 
 # #     # ── Human Face Check ─────────────────────────────
 # #     if has_human_face(img):
@@ -433,7 +433,7 @@
 #     col1, col2 = st.columns(2)
 #     with col1:
 #         st.subheader("📸 Uploaded Image")
-#         st.image(img, width='stretch')
+#         st.image(img, use_container_width=True)
 
 #     # ── Human Face Check ─────────────────────────────
 #     # if has_human_face(img):
@@ -510,7 +510,7 @@
 #     with img_col:
 #         img_url = breed_images.get(top_breed_key)
 #         # if img_url:
-#         #     st.image(img_url, caption=f"Reference: {top_breed_display}", width='stretch')
+#         #     st.image(img_url, caption=f"Reference: {top_breed_display}", use_container_width=True)
 #         if img_url:
 #             try:
 #                 import requests
@@ -518,7 +518,7 @@
 #                 response = requests.get(img_url, timeout=5)
 #                 if response.status_code == 200:
 #                     ref_img = Image.open(BytesIO(response.content))
-#                     st.image(ref_img, caption=f"Reference: {top_breed_display}", width='stretch')
+#                     st.image(ref_img, caption=f"Reference: {top_breed_display}", use_container_width=True)
 #                 else:
 #                     st.caption(f"📖 Reference image unavailable")
 #             except:
@@ -680,7 +680,7 @@ if uploaded is not None:
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("📸 Uploaded Image")
-        st.image(img, width='stretch')
+        st.image(img, use_container_width=True)
 
     # ── Human Face Check ─────────────────────────────
     if has_human_face(img):
@@ -733,7 +733,7 @@ if uploaded is not None:
                 response = requests.get(img_url, timeout=5)
                 if response.status_code == 200:
                     ref_img = Image.open(BytesIO(response.content))
-                    st.image(ref_img, caption=f"Reference: {top_breed_display}", width='stretch')
+                    st.image(ref_img, caption=f"Reference: {top_breed_display}", use_container_width=True)
                 else:
                     st.caption("📖 Reference image unavailable")
             except:
