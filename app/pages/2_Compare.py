@@ -143,9 +143,9 @@ if upload1 and upload2:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.image(img1, width='stretch', caption="Image 1")
+        st.image(img1, use_container_width=True, caption="Image 1")
     with col2:
-        st.image(img2, width='stretch', caption="Image 2")
+        st.image(img2, use_container_width=True, caption="Image 2")
 
     st.markdown("---")
 

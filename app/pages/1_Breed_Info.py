@@ -125,7 +125,7 @@
 
 #     with col1:
 #         try:
-#             st.image(breed["image"], width='stretch', caption=breed["name"])
+#             st.image(breed["image"], use_container_width=True, caption=breed["name"])
 #         except:
 #             st.info("Image not available")
 
@@ -243,7 +243,7 @@
 #     with col1:
 #         img = get_first_image(breed["folder"])
 #         if img:
-#             st.image(img, width='stretch', caption=breed["name"])
+#             st.image(img, use_container_width=True, caption=breed["name"])
 #         else:
 #             st.info("Image not available")
 
@@ -373,7 +373,7 @@ for breed in filtered:
     with col1:
         img = get_best_image(breed["folder"])
         if img:
-            st.image(img, width='stretch', caption=breed["name"])
+            st.image(img, use_container_width=True, caption=breed["name"])
         else:
             st.info("Image not available")
 
